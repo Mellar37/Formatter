@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Image Formatter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-blue-50 min-h-screen p-6">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">Smart Image Formatter</h1>
+            <p class="text-gray-600">Upload an image and format it into different sizes with intelligent positioning</p>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-purple-400 transition-colors">
+                <input type="file" id="imageInput" accept="image/*" class="hidden">
+                <div id="uploadArea" class="cursor-pointer">
+                    <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <p class="text-lg font-medium text-gray-700 mb-2">Click to upload an image</p>
+                    <p class="text-sm text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Original Image Preview -->
+        <div id="originalPreview" class="bg-white rounded-xl shadow-lg p-6 mb-8 hidden">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Original Image</h3>
+            <div class="flex justify-center">
+                <img id="originalImage" class="max-w-full max-h-64 rounded-lg shadow-md">
+            </div>
+            <div id="imageInfo" class="mt-4 text-sm text-gray-600 text-center"></div>
+        </div>
+
+        <!-- Format Options -->
+        <div id="formatOptions" class="bg-white rounded-xl shadow-lg p-6 mb-8 hidden">
+            <h3 class="text-xl font-semibold text-gray-800 mb-6">Format Options</h3>
+            
+            <!-- Focus Position Grid -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-3">Choose Focus Positions</label>
+                <p class="text-sm text-gray-600 mb-4">Select multiple grid positions to create different versions. You can also drag images in each format preview.</p>
+                
+                <!-- Grid Size Options -->
+                <div class="mb-4 flex gap-4 justify-center">
+                    <button id="grid3x3" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm">3×3 Grid</button>
+                    <button id="grid4x4" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm">4×4 Grid</button>
+                    <button id="grid5x5" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm">5×5 Grid</button>
+                </div>
+                
+                <div class="flex justify-center mb-4">
+                    <div class="relative inline-block border-2 border-gray-300 rounded-lg overflow-hidden">
+                        <img id="previewImage" class="max-w-full max-h-96">
+                        <div id="focusGrid" class="absolute inset-0 grid gap-0">
+                            <!-- Grid cells will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center space-y-2">
+                    <p class="text-xs text-gray-500">Selected positions: <span id="selectedPositions" class="font-medium">Center</span></p>
+                    <div class="flex gap-2 justify-center">
+                        <button id="selectAll" class="px-3 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600 transition-colors">Select All</button>
+                        <button id="clearAll" class="px-3 py-1 bg-gray-500 text-white rounded text-xs hover:bg-gray-600 transition-colors">Clear All</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Size Presets by Category -->
+            <div class="space-y-6">
+                <!-- Paid Social e-com still -->
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-3 text-lg">Paid Social e-com still</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <div class="preset-card border-2 border-gray-200 rounded-lg p-3 cursor-pointer hover:border-purple-400 transition-colors" data-width="1080" data-height="1080" data-name="Square">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h5 class="font-medium text-gray-800">Square</h5>
+                                    <p class="text-sm text-gray-600">1080 × 1080</p>
+                                </div>
+                                <div class="selection-indicator w-5 h-5 border-2 border-gray-300 rounded"></div>
+                            </div>
+                        </div>
+                        <div class="preset-card border-2 border-gray-200 rounded-lg p-3 cursor-pointer hover:border-purple-400 transition-colors" data-width="1080" data-height="1350" data-name="Portrait">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h5 class="font-medium text-gray-800">Portrait</h5>
+                                    <p class="text-sm text-gray-600">1080 × 1350</p>
+                                </div>
+                                <div class="selection-indicator w-5 h-5 border-2 border-gray-300 rounded"></div>
+                            </div>
+                        </div>
+                        <div class="preset-card border-2 border-gray-200 rounded-lg p-3 cursor-pointer hover:border-purple-400 transition-colors" data-width="1080" data-height="1920" data-name="Story">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h5 class="font-medium text-gray-800">Story</h5>
+                                    <p class="text-sm text-gray-600">1080 × 1920</p>
+                                </div>
+                                <div class="selection-indicator w-5 h-5 border-2 border-gray-300 rounded"></div>
+                            </div>
+                        </div>
+                        <div class="preset-card border-2 border-gray-200 rounded-lg p-3 cursor-pointer hover:border-purple-400 transition-colors" data-width="1200" data-height="628" data-name="Facebook">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h5 class="font-medium text-gray-800">Facebook</h5>
+                                    <p class="text-sm text-gray-600">1200 × 628</p>
+                                </div>
+                                <div class="selection-indicator w-5 h-5 border-2 border-gray-300 rounded"></div>
+                            </div>
+                        </div>
+                        <div class="preset-card border-2 border-gray-200 rounded-lg p-3 cursor-pointer hover:border-purple-400 transition-colors" data-width="960" data-height="1200" data-name="Pinterest">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h5 class="font-medium text-gray-800">Pinterest</h5>
+                                    <p class="text-sm text-gray-600">960 × 1200</p>
+                                </div>
+                                <div class="selection-indicator w-5 h-5 border-2 border-gray-300 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paid Social e-com video -->
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-3 text-lg">Paid Social e-com video</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <div class="preset-card border-2 border-gray-200 rounded-lg p-3 cursor-pointer hover:border-purple-400 transition-colors" data-width="1080" data-height="1080" data-name="Square Video">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h5 class="font-medium text-gray-800">Square Video</h5>
+                                    <p class="text-sm text-gray-600">1080 × 1080</p>
+                                </div>
+                                <div class="selection-indicator w-5 h-5 border-2 border-gray-300 rounded"></div>
+                            </div>
+                        </div>
+                        <div class="preset-card border-2 border-gray-200 rounded-lg p-3 cursor-pointer hover:border-purple-400 transition-colors" data-width="1080" data-height="1350" data-name="Portrait Video">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h5 class="font-medium text-gray-800">Portrait Video</h5>
+                                    <p class="text-sm text-gray-600">1080 × 1350</p>
+                                </div>
+                                <div class="selection-indicator w-5 h-5 border-2 border-gray-300 rounded"></div>
+                            </div>
+                        </div>
+                        <div class="preset-card border-2 border-gray-200 rounded-lg p-3 cursor-pointer hover:border-purple-400 transition-colors" data-width="1080" data-height="1920" data-name="Story Video">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h5 class="font-medium text-gray-800">Story Video</h5>
+                                    <p class="text-sm text-gray-600">1080 × 1920</p>
+                                </div>
+                                <div class="selection-indicator w-5 h-5 border-2 border-gray-300 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- E-com environmental -->
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-3 text-lg">E-com environmental</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <div class="preset-card border-2 border-gray-200 rounded-lg p-3 cursor-pointer hover:border-purple-400 transition-colors" data-width="960" data-height="960" data-name="Square Env">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h5 class="font-medium text-gray-800">Square Env</h5>
+                                    <p class="text-sm text-gray-600">960 × 960</p>
+                                </div>
+                                <div class="selection-indicator w-5 h-5 border-2 border-gray-300 rounded"></div>
+                            </div>
+                        </div>
+                        <div class="preset-card border-2 border-gray-200 rounded-lg p-3 cursor-pointer hover:border-purple-400 transition-colors" data-width="2378" data-height="1773" data-name="Large Env">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h5 class="font-medium text-gray-800">Large Env</h5>
+                                    <p class="text-sm text-gray-600">2378 × 1773</p>
+                                </div>
+                                <div class="selection-indicator w-5 h-5 border-2 border-gray-300 rounded"></div>
+                            </div>
+                        </div>
+                        <div class="preset-card border-2 border-gray-200 rounded-lg p-3 cursor-pointer hover:border-purple-400 transition-colors" data-width="1440" data-height="350" data-name="Banner Env">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h5 class="font-medium text-gray-800">Banner Env</h5>
+                                    <p class="text-sm text-gray-600">1440 × 350</p>
+                                </div>
+                                <div class="selection-indicator w-5 h-5 border-2 border-gray-300 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-3 text-lg">Newsletter</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <div class="preset-card border-2 border-gray-200 rounded-lg p-3 cursor-pointer hover:border-purple-400 transition-colors" data-width="800" data-height="800" data-name="Newsletter Square">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h5 class="font-medium text-gray-800">Newsletter Square</h5>
+                                    <p class="text-sm text-gray-600">800 × 800</p>
+                                </div>
+                                <div class="selection-indicator w-5 h-5 border-2 border-gray-300 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filename Input -->
+            <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+                <h4 class="font-semibold text-gray-800 mb-3">File Naming</h4>
+                <div class="flex gap-4 items-center justify-center">
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-1">Base filename:</label>
+                        <input type="text" id="baseFilename" class="px-3 py-2 border border-gray-300 rounded-lg text-sm w-48" placeholder="my-image" value="image">
+                    </div>
+                    <div class="text-sm text-gray-500">
+                        <p>Files will be named:</p>
+                        <p class="font-mono text-xs">filename_square.png</p>
+                        <p class="font-mono text-xs">filename_portrait.png</p>
+                        <p class="font-mono text-xs">etc...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generate Button -->
+            <div class="mt-6 text-center">
+                <button id="generateSelected" class="px-8 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium text-lg disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    Generate Selected Formats
+                </button>
+                <p class="text-sm text-gray-500 mt-2">Select one or more formats above to generate</p>
+            </div>
+
+
+
+            <!-- Custom Size -->
+            <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+                <h4 class="font-semibold text-gray-800 mb-3">Custom Size</h4>
+                <div class="flex gap-4 items-center">
+                    <div>
+                        <label class="block text-xs text-gray-600 mb-1">Width</label>
+                        <input type="number" id="customWidth" class="w-20 px-2 py-1 border border-gray-300 rounded text-sm" placeholder="800">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-600 mb-1">Height</label>
+                        <input type="number" id="customHeight" class="w-20 px-2 py-1 border border-gray-300 rounded text-sm" placeholder="600">
+                    </div>
+                    <button id="applyCustom" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm">Apply</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div id="results" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-semibold text-gray-800">Formatted Image</h3>
+                    <button id="downloadBtn" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium">
+                        Download Image
+                    </button>
+                </div>
+                
+                <div class="text-center">
+                    <canvas id="outputCanvas" class="max-w-full border border-gray-200 rounded-lg shadow-md"></canvas>
+                    <div id="outputInfo" class="mt-4 text-sm text-gray-600"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let originalImage = null;
+        let selectedFormats = new Set();
+        let selectedPositions = new Set(['center']); // Default focus positions (multiple)
+        let gridCells = [];
+        let currentGridSize = 3; // Default 3x3 grid
+        let dragStates = {}; // Store drag positions for each format
+
+        // File upload handling
+        document.getElementById('imageInput').addEventListener('change', handleImageUpload);
+        document.getElementById('uploadArea').addEventListener('click', () => {
+            document.getElementById('imageInput').click();
+        });
+
+        // Grid size buttons
+        document.getElementById('grid3x3').addEventListener('click', () => switchGridSize(3));
+        document.getElementById('grid4x4').addEventListener('click', () => switchGridSize(4));
+        document.getElementById('grid5x5').addEventListener('click', () => switchGridSize(5));
+        
+        // Select/Clear all buttons
+        document.getElementById('selectAll').addEventListener('click', selectAllPositions);
+        document.getElementById('clearAll').addEventListener('click', clearAllPositions);
+
+        // Preset size handling - now for multi-selection
+        document.querySelectorAll('.preset-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                e.preventDefault();
+                const width = parseInt(e.currentTarget.dataset.width);
+                const height = parseInt(e.currentTarget.dataset.height);
+                const name = e.currentTarget.dataset.name;
+                const formatKey = `${width}x${height}`;
+                
+                const indicator = e.currentTarget.querySelector('.selection-indicator');
+                
+                if (selectedFormats.has(formatKey)) {
+                    // Deselect
+                    selectedFormats.delete(formatKey);
+                    e.currentTarget.classList.remove('border-purple-500', 'bg-purple-50');
+                    e.currentTarget.classList.add('border-gray-200');
+                    indicator.classList.remove('bg-purple-500', 'border-purple-500');
+                    indicator.classList.add('border-gray-300');
+                } else {
+                    // Select
+                    selectedFormats.add(formatKey);
+                    e.currentTarget.classList.add('border-purple-500', 'bg-purple-50');
+                    e.currentTarget.classList.remove('border-gray-200');
+                    indicator.classList.add('bg-purple-500', 'border-purple-500');
+                    indicator.classList.remove('border-gray-300');
+                }
+                
+                updateGenerateButton();
+            });
+        });
+
+        // Generate selected formats
+        document.getElementById('generateSelected').addEventListener('click', generateSelectedFormats);
+
+        // Custom size handling
+        document.getElementById('applyCustom').addEventListener('click', () => {
+            const width = parseInt(document.getElementById('customWidth').value);
+            const height = parseInt(document.getElementById('customHeight').value);
+            if (width && height) {
+                formatImage(width, height);
+            }
+        });
+
+        // Download handling
+        document.getElementById('downloadBtn').addEventListener('click', downloadImage);
+
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    originalImage = img;
+                    
+                    // Show original preview
+                    const originalPreview = document.getElementById('originalImage');
+                    originalPreview.src = e.target.result;
+                    document.getElementById('originalPreview').classList.remove('hidden');
+                    
+                    // Show image info
+                    document.getElementById('imageInfo').textContent = 
+                        `Original size: ${img.naturalWidth} × ${img.naturalHeight} pixels`;
+                    
+                    // Setup focus grid
+                    setupFocusGrid(e.target.result);
+                    
+                    // Show format options
+                    document.getElementById('formatOptions').classList.remove('hidden');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function switchGridSize(size) {
+            currentGridSize = size;
+            
+            // Update button states
+            document.querySelectorAll('[id^="grid"]').forEach(btn => {
+                btn.classList.remove('bg-purple-600');
+                btn.classList.add('bg-gray-500');
+            });
+            document.getElementById(`grid${size}x${size}`).classList.remove('bg-gray-500');
+            document.getElementById(`grid${size}x${size}`).classList.add('bg-purple-600');
+            
+            // Clear selections and rebuild grid
+            selectedPositions.clear();
+            selectedPositions.add('center');
+            
+            if (originalImage) {
+                setupFocusGrid(document.getElementById('previewImage').src);
+            }
+        }
+
+        function setupFocusGrid(imageSrc) {
+            const previewImage = document.getElementById('previewImage');
+            const focusGrid = document.getElementById('focusGrid');
+            
+            // Set the preview image
+            previewImage.src = imageSrc;
+            
+            // Clear existing grid
+            focusGrid.innerHTML = '';
+            gridCells = [];
+            
+            // Set grid layout
+            focusGrid.className = `absolute inset-0 grid grid-cols-${currentGridSize} grid-rows-${currentGridSize} gap-0`;
+            
+            // Generate positions based on grid size
+            const positions = generateGridPositions(currentGridSize);
+            
+            positions.forEach((position, index) => {
+                const cell = document.createElement('div');
+                cell.className = 'border border-white border-opacity-30 cursor-pointer hover:bg-purple-200 hover:bg-opacity-50 transition-colors flex items-center justify-center';
+                cell.dataset.position = position;
+                
+                // Add visual indicator
+                const indicator = document.createElement('div');
+                indicator.className = 'w-2 h-2 rounded-full bg-white bg-opacity-90 hidden';
+                cell.appendChild(indicator);
+                
+                // Add click handler for multi-select
+                cell.addEventListener('click', () => toggleFocusPosition(position, cell));
+                
+                focusGrid.appendChild(cell);
+                gridCells.push(cell);
+            });
+            
+            // Select center by default
+            const centerIndex = Math.floor(positions.length / 2);
+            toggleFocusPosition(positions[centerIndex], gridCells[centerIndex]);
+        }
+
+        function generateGridPositions(size) {
+            const positions = [];
+            const verticalPositions = size === 3 ? ['top', 'center', 'bottom'] :
+                                   size === 4 ? ['top', 'upper', 'lower', 'bottom'] :
+                                   ['top', 'upper-mid', 'center', 'lower-mid', 'bottom'];
+            
+            const horizontalPositions = size === 3 ? ['left', 'center', 'right'] :
+                                      size === 4 ? ['left', 'center-left', 'center-right', 'right'] :
+                                      ['left', 'left-mid', 'center', 'right-mid', 'right'];
+            
+            for (let row = 0; row < size; row++) {
+                for (let col = 0; col < size; col++) {
+                    const vPos = verticalPositions[row];
+                    const hPos = horizontalPositions[col];
+                    
+                    if (vPos === 'center' && hPos === 'center') {
+                        positions.push('center');
+                    } else if (vPos === 'center') {
+                        positions.push(`center-${hPos}`);
+                    } else if (hPos === 'center') {
+                        positions.push(`${vPos}-center`);
+                    } else {
+                        positions.push(`${vPos}-${hPos}`);
+                    }
+                }
+            }
+            
+            return positions;
+        }
+        
+        function toggleFocusPosition(position, cell) {
+            if (selectedPositions.has(position)) {
+                // Deselect
+                selectedPositions.delete(position);
+                cell.classList.remove('bg-purple-500', 'bg-opacity-50');
+                cell.querySelector('div').classList.add('hidden');
+            } else {
+                // Select
+                selectedPositions.add(position);
+                cell.classList.add('bg-purple-500', 'bg-opacity-50');
+                cell.querySelector('div').classList.remove('hidden');
+            }
+            
+            updateSelectedPositionsDisplay();
+        }
+
+        function selectAllPositions() {
+            selectedPositions.clear();
+            gridCells.forEach((cell, index) => {
+                const position = cell.dataset.position;
+                selectedPositions.add(position);
+                cell.classList.add('bg-purple-500', 'bg-opacity-50');
+                cell.querySelector('div').classList.remove('hidden');
+            });
+            updateSelectedPositionsDisplay();
+        }
+
+        function clearAllPositions() {
+            selectedPositions.clear();
+            gridCells.forEach(cell => {
+                cell.classList.remove('bg-purple-500', 'bg-opacity-50');
+                cell.querySelector('div').classList.add('hidden');
+            });
+            updateSelectedPositionsDisplay();
+        }
+
+        function updateSelectedPositionsDisplay() {
+            const display = document.getElementById('selectedPositions');
+            if (selectedPositions.size === 0) {
+                display.textContent = 'None';
+            } else if (selectedPositions.size === 1) {
+                const position = Array.from(selectedPositions)[0];
+                display.textContent = position.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            } else {
+                display.textContent = `${selectedPositions.size} positions selected`;
+            }
+        }
+
+        function formatImage(targetWidth, targetHeight) {
+            if (!originalImage || selectedPositions.size === 0) return;
+
+            const canvas = document.getElementById('outputCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+
+            // Scale image to fill the entire canvas (no white space)
+            const imgAspect = originalImage.naturalWidth / originalImage.naturalHeight;
+            const targetAspect = targetWidth / targetHeight;
+            
+            let drawWidth, drawHeight;
+            
+            if (imgAspect > targetAspect) {
+                // Image is wider - scale to fill height completely
+                drawHeight = targetHeight;
+                drawWidth = drawHeight * imgAspect;
+            } else {
+                // Image is taller - scale to fill width completely
+                drawWidth = targetWidth;
+                drawHeight = drawWidth / imgAspect;
+            }
+            
+            // Use the first selected position for single format generation
+            const firstPosition = Array.from(selectedPositions)[0];
+            const { drawX, drawY } = calculateDrawPosition(firstPosition, targetWidth, targetHeight, drawWidth, drawHeight);
+            
+            // Draw the image
+            ctx.drawImage(originalImage, drawX, drawY, drawWidth, drawHeight);
+
+            // Show results
+            document.getElementById('results').classList.remove('hidden');
+            document.getElementById('outputInfo').textContent = 
+                `Formatted size: ${targetWidth} × ${targetHeight} pixels`;
+            
+            // Scroll to results
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+
+
+        function updateGenerateButton() {
+            const generateBtn = document.getElementById('generateSelected');
+            if (selectedFormats.size > 0) {
+                generateBtn.disabled = false;
+                generateBtn.textContent = `Generate ${selectedFormats.size} Format${selectedFormats.size > 1 ? 's' : ''}`;
+            } else {
+                generateBtn.disabled = true;
+                generateBtn.textContent = 'Generate Selected Formats';
+            }
+        }
+
+        function generateSelectedFormats() {
+            if (!originalImage || selectedFormats.size === 0 || selectedPositions.size === 0) return;
+
+            // Clear previous results
+            const existingResults = document.getElementById('multiResults');
+            if (existingResults) {
+                existingResults.remove();
+            }
+
+            // Create results container
+            const resultsContainer = document.createElement('div');
+            resultsContainer.id = 'multiResults';
+            resultsContainer.className = 'mt-8';
+            
+            const resultsHTML = `
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800">Generated Formats (${selectedFormats.size} formats)</h3>
+                        <div class="flex gap-3">
+                            <button id="downloadAllPngBtn" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                                Download All as PNG
+                            </button>
+                            <button id="downloadAllBtn" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium">
+                                Download All as ZIP
+                            </button>
+                        </div>
+                    </div>
+                    <div id="formatGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </div>
+            `;
+            
+            resultsContainer.innerHTML = resultsHTML;
+            document.querySelector('.max-w-6xl').appendChild(resultsContainer);
+
+            const formatGrid = document.getElementById('formatGrid');
+            const generatedImages = [];
+
+            // Generate each selected format (one per format, not per position)
+            selectedFormats.forEach(formatKey => {
+                const [width, height] = formatKey.split('x').map(Number);
+                const formatName = getFormatName(width, height);
+                
+                // Use the first selected position as the initial position
+                const initialPosition = Array.from(selectedPositions)[0];
+                
+                // Create canvas for this format
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                
+                // Clear canvas with white background
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, width, height);
+
+                // Scale image to fill the entire canvas (no white space)
+                const imgAspect = originalImage.naturalWidth / originalImage.naturalHeight;
+                const targetAspect = width / height;
+                
+                let drawWidth, drawHeight;
+                
+                if (imgAspect > targetAspect) {
+                    // Image is wider - scale to fill height completely
+                    drawHeight = height;
+                    drawWidth = drawHeight * imgAspect;
+                } else {
+                    // Image is taller - scale to fill width completely
+                    drawWidth = width;
+                    drawHeight = drawWidth / imgAspect;
+                }
+                
+                // Calculate position based on initial focus position
+                const { drawX, drawY } = calculateDrawPosition(initialPosition, width, height, drawWidth, drawHeight);
+                
+                // Draw the image
+                ctx.drawImage(originalImage, drawX, drawY, drawWidth, drawHeight);
+
+                // Create draggable preview element with position selector
+                const formatDiv = document.createElement('div');
+                formatDiv.className = 'border border-gray-200 rounded-lg p-4';
+                const uniqueId = `${formatKey}`;
+                
+                // Create position selector buttons
+                let positionButtons = '';
+                if (selectedPositions.size > 1) {
+                    positionButtons = `
+                        <div class="mb-3">
+                            <p class="text-xs text-gray-600 mb-2">Quick positions:</p>
+                            <div class="flex flex-wrap gap-1 justify-center">
+                                ${Array.from(selectedPositions).map(pos => {
+                                    const label = pos.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                                    return `<button class="position-btn px-2 py-1 text-xs bg-gray-200 hover:bg-purple-200 rounded transition-colors" data-position="${pos}" data-format="${uniqueId}">${label}</button>`;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                formatDiv.innerHTML = `
+                    <div class="text-center mb-3">
+                        <h4 class="font-medium text-gray-800">${formatName}</h4>
+                        <p class="text-sm text-gray-600">${width} × ${height}</p>
+                    </div>
+                    ${positionButtons}
+                    <div class="flex justify-center mb-3 relative">
+                        <div class="relative border border-gray-200 rounded shadow-sm overflow-hidden" style="width: 200px; height: ${200 * height / width}px;">
+                            <canvas id="preview-${uniqueId}" class="absolute cursor-move" width="${width}" height="${height}" style="width: 200px; height: ${200 * height / width}px;"></canvas>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 text-center mb-2">💡 Drag the image to reposition it</p>
+                    <button class="download-single-btn w-full px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm" data-format-name="${formatName}" data-canvas-id="preview-${uniqueId}">
+                        Download
+                    </button>
+                `;
+                
+                formatGrid.appendChild(formatDiv);
+                
+                // Set up the preview canvas with dragging
+                const previewCanvas = document.getElementById(`preview-${uniqueId}`);
+                const previewCtx = previewCanvas.getContext('2d');
+                
+                // Initialize drag state
+                dragStates[uniqueId] = { offsetX: drawX, offsetY: drawY };
+                
+                // Draw initial image
+                previewCtx.fillStyle = '#ffffff';
+                previewCtx.fillRect(0, 0, width, height);
+                previewCtx.drawImage(originalImage, drawX, drawY, drawWidth, drawHeight);
+                
+                // Add drag functionality
+                setupDragFunctionality(previewCanvas, uniqueId, width, height, drawWidth, drawHeight);
+
+                // Add position button functionality
+                formatDiv.querySelectorAll('.position-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const position = btn.dataset.position;
+                        const formatId = btn.dataset.format;
+                        
+                        // Calculate new position
+                        const { drawX: newX, drawY: newY } = calculateDrawPosition(position, width, height, drawWidth, drawHeight);
+                        
+                        // Update drag state
+                        dragStates[formatId].offsetX = newX;
+                        dragStates[formatId].offsetY = newY;
+                        
+                        // Redraw image
+                        const canvas = document.getElementById(`preview-${formatId}`);
+                        const ctx = canvas.getContext('2d');
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(0, 0, width, height);
+                        ctx.drawImage(originalImage, newX, newY, drawWidth, drawHeight);
+                        
+                        // Update button states
+                        formatDiv.querySelectorAll('.position-btn').forEach(b => {
+                            b.classList.remove('bg-purple-500', 'text-white');
+                            b.classList.add('bg-gray-200');
+                        });
+                        btn.classList.remove('bg-gray-200');
+                        btn.classList.add('bg-purple-500', 'text-white');
+                    });
+                });
+
+                // Add download button functionality
+                const downloadBtn = formatDiv.querySelector('.download-single-btn');
+                downloadBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const formatName = e.target.dataset.formatName;
+                    const canvasId = e.target.dataset.canvasId;
+                    const canvas = document.getElementById(canvasId);
+                    if (canvas) {
+                        try {
+                            const baseFilename = document.getElementById('baseFilename').value || 'image';
+                            const cleanBaseFilename = baseFilename.replace(/[^a-zA-Z0-9-_]/g, '_');
+                            const cleanFormatName = formatName.toLowerCase().replace(/\s+/g, '_');
+                            
+                            // Create a temporary canvas to ensure we get the current state
+                            const tempCanvas = document.createElement('canvas');
+                            tempCanvas.width = canvas.width;
+                            tempCanvas.height = canvas.height;
+                            const tempCtx = tempCanvas.getContext('2d');
+                            tempCtx.drawImage(canvas, 0, 0);
+                            
+                            const link = document.createElement('a');
+                            link.download = `${cleanBaseFilename}_${cleanFormatName}.png`;
+                            link.href = tempCanvas.toDataURL('image/png');
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                        } catch (error) {
+                            console.error('Download failed:', error);
+                            alert('Download failed. Please try again.');
+                        }
+                    } else {
+                        alert('Canvas not found. Please try regenerating the formats.');
+                    }
+                });
+
+                generatedImages.push({
+                    name: formatName,
+                    canvas: previewCanvas,
+                    width: width,
+                    height: height
+                });
+            });
+
+            // Store generated images for ZIP download
+            window.generatedImages = generatedImages;
+
+            // Add download all functionality
+            document.getElementById('downloadAllBtn').addEventListener('click', downloadAllAsZip);
+            document.getElementById('downloadAllPngBtn').addEventListener('click', downloadAllAsPng);
+
+            // Scroll to results
+            resultsContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function getFormatName(width, height) {
+            const formatMap = {
+                '1080x1080': 'Square',
+                '1080x1350': 'Portrait',
+                '1080x1920': 'Story',
+                '1200x628': 'Facebook',
+                '960x1200': 'Pinterest',
+                '960x960': 'Square Env',
+                '2378x1773': 'Large Env',
+                '1440x350': 'Banner Env',
+                '800x800': 'Newsletter Square'
+            };
+            return formatMap[`${width}x${height}`] || `${width}x${height}`;
+        }
+
+        function downloadSingleFormat(name, dataUrl) {
+            const link = document.createElement('a');
+            link.download = `${name.replace(/\s+/g, '_')}.png`;
+            link.href = dataUrl;
+            link.click();
+        }
+
+        function calculateDrawPosition(position, canvasWidth, canvasHeight, drawWidth, drawHeight) {
+            let drawX, drawY;
+            
+            // Handle different position formats
+            const parts = position.split('-');
+            const vPos = parts[0];
+            const hPos = parts.length > 1 ? parts[1] : parts[0];
+            
+            // Vertical positioning
+            switch (vPos) {
+                case 'top':
+                    drawY = 0;
+                    break;
+                case 'upper':
+                case 'upper-mid':
+                    drawY = (canvasHeight - drawHeight) * 0.25;
+                    break;
+                case 'center':
+                    drawY = (canvasHeight - drawHeight) / 2;
+                    break;
+                case 'lower':
+                case 'lower-mid':
+                    drawY = (canvasHeight - drawHeight) * 0.75;
+                    break;
+                case 'bottom':
+                    drawY = canvasHeight - drawHeight;
+                    break;
+                default:
+                    drawY = (canvasHeight - drawHeight) / 2;
+            }
+            
+            // Horizontal positioning
+            switch (hPos) {
+                case 'left':
+                    drawX = 0;
+                    break;
+                case 'left-mid':
+                case 'center-left':
+                    drawX = (canvasWidth - drawWidth) * 0.25;
+                    break;
+                case 'center':
+                    drawX = (canvasWidth - drawWidth) / 2;
+                    break;
+                case 'right-mid':
+                case 'center-right':
+                    drawX = (canvasWidth - drawWidth) * 0.75;
+                    break;
+                case 'right':
+                    drawX = canvasWidth - drawWidth;
+                    break;
+                default:
+                    drawX = (canvasWidth - drawWidth) / 2;
+            }
+            
+            return { drawX, drawY };
+        }
+
+        function setupDragFunctionality(canvas, uniqueId, canvasWidth, canvasHeight, drawWidth, drawHeight) {
+            let isDragging = false;
+            let lastX, lastY;
+            
+            // Set initial cursor
+            canvas.style.cursor = 'grab';
+            
+            canvas.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                isDragging = true;
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                lastX = (e.clientX - rect.left) * scaleX;
+                lastY = (e.clientY - rect.top) * scaleY;
+                canvas.style.cursor = 'grabbing';
+                
+                // Add visual feedback
+                canvas.style.opacity = '0.8';
+            });
+            
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDragging) {
+                    canvas.style.cursor = 'grab';
+                    return;
+                }
+                
+                e.preventDefault();
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                const currentX = (e.clientX - rect.left) * scaleX;
+                const currentY = (e.clientY - rect.top) * scaleY;
+                
+                const deltaX = currentX - lastX;
+                const deltaY = currentY - lastY;
+                
+                // Update drag state
+                dragStates[uniqueId].offsetX += deltaX;
+                dragStates[uniqueId].offsetY += deltaY;
+                
+                // Constrain to keep image covering the canvas
+                const minX = canvasWidth - drawWidth;
+                const maxX = 0;
+                const minY = canvasHeight - drawHeight;
+                const maxY = 0;
+                
+                dragStates[uniqueId].offsetX = Math.max(minX, Math.min(maxX, dragStates[uniqueId].offsetX));
+                dragStates[uniqueId].offsetY = Math.max(minY, Math.min(maxY, dragStates[uniqueId].offsetY));
+                
+                // Redraw image
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+                ctx.drawImage(originalImage, dragStates[uniqueId].offsetX, dragStates[uniqueId].offsetY, drawWidth, drawHeight);
+                
+                lastX = currentX;
+                lastY = currentY;
+            });
+            
+            canvas.addEventListener('mouseup', () => {
+                isDragging = false;
+                canvas.style.cursor = 'grab';
+                canvas.style.opacity = '1';
+            });
+            
+            canvas.addEventListener('mouseleave', () => {
+                isDragging = false;
+                canvas.style.cursor = 'grab';
+                canvas.style.opacity = '1';
+            });
+            
+            // Add touch support for mobile devices
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                lastX = (touch.clientX - rect.left) * scaleX;
+                lastY = (touch.clientY - rect.top) * scaleY;
+                isDragging = true;
+                canvas.style.opacity = '0.8';
+            });
+            
+            canvas.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                
+                const touch = e.touches[0];
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                const currentX = (touch.clientX - rect.left) * scaleX;
+                const currentY = (touch.clientY - rect.top) * scaleY;
+                
+                const deltaX = currentX - lastX;
+                const deltaY = currentY - lastY;
+                
+                // Update drag state
+                dragStates[uniqueId].offsetX += deltaX;
+                dragStates[uniqueId].offsetY += deltaY;
+                
+                // Constrain to keep image covering the canvas
+                const minX = canvasWidth - drawWidth;
+                const maxX = 0;
+                const minY = canvasHeight - drawHeight;
+                const maxY = 0;
+                
+                dragStates[uniqueId].offsetX = Math.max(minX, Math.min(maxX, dragStates[uniqueId].offsetX));
+                dragStates[uniqueId].offsetY = Math.max(minY, Math.min(maxY, dragStates[uniqueId].offsetY));
+                
+                // Redraw image
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+                ctx.drawImage(originalImage, dragStates[uniqueId].offsetX, dragStates[uniqueId].offsetY, drawWidth, drawHeight);
+                
+                lastX = currentX;
+                lastY = currentY;
+            });
+            
+            canvas.addEventListener('touchend', () => {
+                isDragging = false;
+                canvas.style.opacity = '1';
+            });
+        }
+
+        function downloadAllAsPng() {
+            if (!window.generatedImages || window.generatedImages.length === 0) {
+                alert('No images to download. Please generate formats first.');
+                return;
+            }
+
+            const baseFilename = document.getElementById('baseFilename').value || 'image';
+            const cleanBaseFilename = baseFilename.replace(/[^a-zA-Z0-9-_]/g, '_');
+
+            // Download each image individually with a small delay
+            window.generatedImages.forEach((img, index) => {
+                setTimeout(() => {
+                    try {
+                        const cleanFormatName = img.name.toLowerCase().replace(/\s+/g, '_');
+                        
+                        // Create a temporary canvas to ensure we get the current state
+                        const tempCanvas = document.createElement('canvas');
+                        tempCanvas.width = img.canvas.width;
+                        tempCanvas.height = img.canvas.height;
+                        const tempCtx = tempCanvas.getContext('2d');
+                        tempCtx.drawImage(img.canvas, 0, 0);
+                        
+                        const link = document.createElement('a');
+                        link.download = `${cleanBaseFilename}_${cleanFormatName}.png`;
+                        link.href = tempCanvas.toDataURL('image/png');
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    } catch (error) {
+                        console.error('Download failed for', img.name, error);
+                    }
+                }, index * 200); // Small delay between downloads
+            });
+
+            // Show completion message
+            setTimeout(() => {
+                alert(`Started downloading ${window.generatedImages.length} PNG images with filename "${cleanBaseFilename}_[format].png"!`);
+            }, 300);
+        }
+
+        function downloadAllAsZip() {
+            if (!window.generatedImages || window.generatedImages.length === 0) {
+                alert('No images to download. Please generate formats first.');
+                return;
+            }
+
+            const baseFilename = document.getElementById('baseFilename').value || 'image';
+            const cleanBaseFilename = baseFilename.replace(/[^a-zA-Z0-9-_]/g, '_');
+
+            // Download each image individually with a small delay (since true ZIP requires additional libraries)
+            window.generatedImages.forEach((img, index) => {
+                setTimeout(() => {
+                    try {
+                        const cleanFormatName = img.name.toLowerCase().replace(/\s+/g, '_');
+                        
+                        // Create a temporary canvas to ensure we get the current state
+                        const tempCanvas = document.createElement('canvas');
+                        tempCanvas.width = img.canvas.width;
+                        tempCanvas.height = img.canvas.height;
+                        const tempCtx = tempCanvas.getContext('2d');
+                        tempCtx.drawImage(img.canvas, 0, 0);
+                        
+                        const link = document.createElement('a');
+                        link.download = `${cleanBaseFilename}_${cleanFormatName}.png`;
+                        link.href = tempCanvas.toDataURL('image/png');
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    } catch (error) {
+                        console.error('Download failed for', img.name, error);
+                    }
+                }, index * 200); // Small delay between downloads
+            });
+
+            // Show completion message
+            setTimeout(() => {
+                alert(`Started downloading ${window.generatedImages.length} images with filename "${cleanBaseFilename}_[format].png"!`);
+            }, 300);
+        }
+
+        function downloadImage() {
+            const canvas = document.getElementById('outputCanvas');
+            
+            if (canvas && canvas.width > 0 && canvas.height > 0) {
+                try {
+                    const baseFilename = document.getElementById('baseFilename').value || 'image';
+                    const cleanBaseFilename = baseFilename.replace(/[^a-zA-Z0-9-_]/g, '_');
+                    
+                    // Convert canvas to blob for better browser compatibility
+                    canvas.toBlob((blob) => {
+                        if (blob) {
+                            const url = URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = `${cleanBaseFilename}_formatted.png`;
+                            
+                            // Force download by simulating user interaction
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            
+                            // Clean up the object URL
+                            setTimeout(() => URL.revokeObjectURL(url), 100);
+                        } else {
+                            // Fallback to data URL method
+                            const dataURL = canvas.toDataURL('image/png');
+                            const link = document.createElement('a');
+                            link.href = dataURL;
+                            link.download = `${cleanBaseFilename}_formatted.png`;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                        }
+                    }, 'image/png', 1.0);
+                    
+                } catch (error) {
+                    console.error('Download error:', error);
+                    alert('Download failed. Please try right-clicking the image and selecting "Save image as..."');
+                }
+            } else {
+                alert('No image to download. Please generate a format first.');
+            }
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96add9a7e17b9310',t:'MTc1NDQ3NjEzNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
